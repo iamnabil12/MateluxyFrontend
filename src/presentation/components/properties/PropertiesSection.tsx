@@ -107,8 +107,20 @@ const PropertyCard = ({
             <Flex className="flex items-center justify-between pt-3 border-t border-gray-100">
                 {developer ? (
                     <Box>
-                        <Text className="text-gray-400 text-[11px]">Developed by</Text>
-                        <Text className="font-bold text-[14px] text-black">{developer}</Text>
+                        <Text className="text-gray-400 text-[13px] font-normal mb-1">Developed by</Text>
+                        {developer === 'NAKHEEL' ? (
+                            <Box className="w-[79px] h-[27px] relative">
+                                <Image
+                                    src="/nakheel.svg"
+                                    alt="Nakheel"
+                                    width={79}
+                                    height={27}
+                                    style={{ objectFit: 'contain' }}
+                                />
+                            </Box>
+                        ) : (
+                            <Text className="font-bold text-[14px] text-black">{developer}</Text>
+                        )}
                     </Box>
                 ) : (
                     <Flex className="flex items-center gap-2">
