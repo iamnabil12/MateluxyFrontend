@@ -38,3 +38,14 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Global cursor pointer for clickable elements */
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+label {
+  cursor: pointer !important;
+}
