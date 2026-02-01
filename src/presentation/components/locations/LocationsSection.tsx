@@ -128,17 +128,17 @@ export const LocationsSection = () => {
             {
                 featureType: "all",
                 elementType: "labels.text.fill",
-                stylers: [{ color: "#8a8a8a" }]
+                stylers: [{ color: "#ffffff" }]
             },
             {
                 featureType: "all",
                 elementType: "labels.text.stroke",
-                stylers: [{ visibility: "off" }]
+                stylers: [{ color: "#242f3e" }, { lightness: -20 }]
             },
             {
                 featureType: "administrative",
                 elementType: "all",
-                stylers: [{ visibility: "off" }]
+                stylers: [{ visibility: "on" }]
             },
             {
                 featureType: "administrative.country",
@@ -319,21 +319,24 @@ export const LocationsSection = () => {
                     </Text>
 
                     {/* Tabs */}
-                    <Flex className="flex items-center border border-gray-200 rounded-full overflow-hidden bg-white shadow-sm">
+                    {/* Tabs */}
+                    <Box className="bg-[#EDEDED] p-1.5 rounded-full inline-flex items-center">
                         {(['Buy', 'Rent', 'Off Plan'] as const).map((tab) => (
-                            <Box
+                            <button
                                 key={tab}
-                                as="button"
                                 onClick={() => setActiveTab(tab)}
-                                className={`px-6 py-2.5 text-[14px] font-medium transition-colors ${activeTab === tab
-                                    ? 'bg-gray-100 text-black'
-                                    : 'bg-white text-gray-500 hover:bg-gray-50'
-                                    }`}
+                                className={`
+                                    px-8 py-2.5 rounded-full text-[16px] font-semibold transition-all duration-300 font-montserrat
+                                    ${activeTab === tab
+                                        ? 'bg-white text-black shadow-sm'
+                                        : 'text-[#6D6D6D] hover:text-black'
+                                    }
+                                `}
                             >
                                 {tab}
-                            </Box>
+                            </button>
                         ))}
-                    </Flex>
+                    </Box>
                 </Flex>
 
                 {/* Map Section */}

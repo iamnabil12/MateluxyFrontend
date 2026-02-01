@@ -195,9 +195,9 @@ export const PropertyMapSection = () => {
                                     label={{
                                         text: `${poly.count} Properties`,
                                         className: "map-marker-label", // We would need global CSS for this to style perfectly
-                                        color: "#333333",
-                                        fontSize: "12px",
-                                        fontWeight: "600"
+                                        color: "#000000",
+                                        fontSize: "14px",
+                                        fontWeight: "bold"
                                     }}
                                     icon={{
                                         path: google.maps.SymbolPath.CIRCLE,

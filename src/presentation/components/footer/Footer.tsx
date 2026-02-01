@@ -8,9 +8,11 @@ export const Footer = () => {
     const [email, setEmail] = useState('');
 
     return (
-        <Box className="w-full p-4">
-            <Box as="footer" className="w-full bg-[#C4363A] text-white rounded-[30px]">
-                <Box className="w-full px-[31px] pt-[36px] pb-20">
+        <Box className="w-full px-[26px] py-4">
+            <Box as="footer" className="w-full h-[831px] relative overflow-hidden text-white rounded-[30px] mx-auto">
+                <Box className="absolute inset-0 bg-[url('/Image/footerbg.png')] bg-[length:125%] bg-center bg-no-repeat" />
+                <Box className="absolute inset-0 bg-[#D62222]/90" />
+                <Box className="relative z-10 w-full h-full px-[31px] pt-[36px] pb-[42px] flex flex-col">
                     {/* Newsletter Section */}
                     <Box className="bg-white rounded-[25px] px-10 md:px-12 h-[270px] mb-10 flex items-center relative overflow-hidden">
                         {/* Texture overlay */}
@@ -36,15 +38,21 @@ export const Footer = () => {
                                 </Box>
                             </Box>
 
-                            {/* Right side - Email input */}
                             <Box className="absolute right-[99px] top-1/2 -translate-y-1/2">
-                                <input
-                                    type="email"
-                                    placeholder="Email address"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-[361px] h-[62px] bg-[#EDEDED] text-gray-700 placeholder-[#9D9D9D] outline-none text-[20px] px-6 rounded-[20px] font-normal"
-                                />
+                                <Flex className="gap-2.5 mb-2">
+                                    <input
+                                        type="email"
+                                        placeholder="Email address"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-[24vw] h-[62px] bg-[#EDEDED] text-gray-700 placeholder-[#9D9D9D] outline-none text-[20px] px-6 rounded-[20px] font-normal"
+                                    />
+                                    <button className="w-[62px] h-[62px] bg-[#EDEDED] rounded-full flex items-center justify-center hover:bg-[#E0E0E0] transition-colors">
+                                        <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M0.499979 19.5769L19.5769 0.5M19.5769 0.5V19.5769M19.5769 0.5H0.499979" stroke="#FF0000" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                </Flex>
                                 <Text className="text-[#B6B6B6] text-[14px] font-normal pr-[52px] text-left mt-1.5">
                                     By submitting you agree to our{' '}
                                     <a href="#" className="text-[#9F9F9F] hover:text-gray-800 font-semibold">Terms & Conditions</a>
@@ -57,32 +65,29 @@ export const Footer = () => {
                     </Box>
 
                     {/* Contact Bar */}
-                    <Flex className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-8 border-b border-white/20">
-                        <Flex className="flex items-center gap-3">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20.01 15.38C18.78 15.38 17.59 15.18 16.48 14.82C16.13 14.7 15.74 14.79 15.47 15.06L13.9 17.03C11.07 15.68 8.42 13.13 7.01 10.2L8.96 8.54C9.23 8.26 9.31 7.87 9.2 7.52C8.83 6.41 8.64 5.22 8.64 3.99C8.64 3.45 8.19 3 7.65 3H4.19C3.65 3 3 3.24 3 3.99C3 13.28 10.73 21 20.01 21C20.72 21 21 20.37 21 19.82V16.37C21 15.83 20.55 15.38 20.01 15.38Z" fill="white" />
-                            </svg>
+                    <Box className="absolute top-[417px] left-[70px] right-[70px] h-px bg-white/20" />
+                    <Flex className="flex flex-col md:flex-row items-start md:items-center">
+                        <Flex className="flex items-center gap-3 mr-[225px] ml-[16px]">
+                            <Image src="/call.svg" alt="" width={30} height={30} className="mb-auto mt-1 w-[33px] h-[33px]" />
                             <Box>
-                                <Text className="text-[12px] opacity-90">Call us for support</Text>
-                                <a href="tel:+97158559085" className="text-[14px] font-semibold hover:underline">
-                                    +971 58 559 0085 ↗
+                                <Text className="text-[14px] font-medium font-montserrat text-white">Call us for support</Text>
+                                <a href="tel:+97158559085" className="text-[16px] font-medium font-montserrat text-white hover:underline flex items-center gap-1">
+                                    +971 58 559 0085 <Image src="/Arrow.svg" alt="" width={10} height={10} className="inline-block" />
                                 </a>
                             </Box>
                         </Flex>
 
                         <Flex className="flex items-center gap-3">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white" />
-                            </svg>
+                            <Image src="/email.svg" alt="" width={41} height={33} className="mb-auto mt-1 w-[41.25px] h-[33px]" />
                             <Box>
-                                <Text className="text-[12px] opacity-90">Send us mail</Text>
-                                <a href="mailto:info@mateluxy.com" className="text-[14px] font-semibold hover:underline">
-                                    info@mateluxy.com ↗
+                                <Text className="text-[14px] font-medium font-montserrat text-white">Send us mail</Text>
+                                <a href="mailto:info@mateluxy.com" className="text-[16px] font-medium font-montserrat text-white hover:underline flex items-center gap-1">
+                                    info@mateluxy.com <Image src="/Arrow.svg" alt="" width={10} height={10} className="inline-block" />
                                 </a>
                             </Box>
                         </Flex>
 
-                        <Flex className="flex gap-4">
+                        <Flex className="flex gap-4 ml-auto">
                             <a href="#" className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-full transition-colors" aria-label="Facebook">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -101,39 +106,46 @@ export const Footer = () => {
                         </Flex>
                     </Flex>
 
+                    {/* Logo - Centered between top divider (417px) and bottom divider (~720px) */}
+                    <Box className="absolute top-[511px] left-[70px]">
+                        <Flex className="flex items-center gap-3">
+                            <Image
+                                src="/Logo.svg"
+                                alt="Mateluxy"
+                                width={350}
+                                height={116}
+                                className="object-contain brightness-0 invert"
+                            />
+                        </Flex>
+                    </Box>
+
                     {/* Main Footer Content */}
-                    <Flex className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-                        {/* Logo */}
-                        <Box className="lg:w-1/4">
-                            <Flex className="flex items-center gap-3">
-                                <Box className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M20 0L0 10V30L20 40L40 30V10L20 0Z" fill="#C4363A" />
-                                        <path d="M20 8L8 14V26L20 32L32 26V14L20 8Z" fill="white" />
-                                    </svg>
-                                </Box>
-                                <Box>
-                                    <Text className="text-[20px] font-bold">MATELUXY</Text>
-                                    <Text className="text-[12px] opacity-80">REAL ESTATE</Text>
-                                </Box>
-                            </Flex>
-                        </Box>
+                    <Flex className="relative w-full flex-1">
+
 
                         {/* Visit Our Office */}
-                        <Box className="lg:w-1/4">
-                            <Text className="text-[16px] font-semibold mb-4">Visit Our Office</Text>
+                        <Box className="absolute left-[800px] top-[45px]">
+                            <Text className="text-[21px] font-semibold font-montserrat mb-4">Visit Our Office</Text>
                             <Stack className="space-y-2 text-[14px] opacity-90">
-                                <Text>Bay Square - Office #601 - Building 13 - Business Bay</Text>
-                                <Text className="font-medium">Dubai - United Arab Emirates</Text>
-                                <Text className="mt-3">Mon - Fri : 9:00 AM to 6:00 PM</Text>
-                                <Text>Saturday : 9:00 AM to 2:00 PM</Text>
-                                <Text>Sunday : Closed</Text>
+                                <Text className="text-[18px] font-medium font-montserrat text-[#ffffff] opacity-100">
+                                    Bay Square - Office #601 - Building 13 -<br /> Business Bay
+                                </Text>
+                                <Text className="text-[18px] font-semibold font-montserrat text-[#ffffff] opacity-100">Dubai - United Arab Emirates</Text>
+                                <Text className="mt-3 text-[18px] font-montserrat text-[#ffffff] opacity-100">
+                                    <span className="font-semibold">Mon - Fri :</span> <span className="font-medium">9:00 AM to 6:00 PM</span>
+                                </Text>
+                                <Text className="text-[18px] font-montserrat text-[#ffffff] opacity-100">
+                                    <span className="font-semibold">Saturday :</span> <span className="font-medium">9:00 AM to 2:00 PM</span>
+                                </Text>
+                                <Text className="text-[18px] font-montserrat text-[#ffffff] opacity-100">
+                                    <span className="font-semibold">Sunday :</span> <span className="font-medium">Closed</span>
+                                </Text>
                             </Stack>
                         </Box>
 
                         {/* Services */}
-                        <Box className="lg:w-1/4">
-                            <Text className="text-[16px] font-semibold mb-4">Services</Text>
+                        <Box className="absolute left-[1300px] top-[45px]">
+                            <Text className="text-[21px] font-semibold font-montserrat mb-4">Services</Text>
                             <Stack className="space-y-2.5">
                                 {[
                                     'Residential areas',
@@ -145,7 +157,7 @@ export const Footer = () => {
                                     <a
                                         key={service}
                                         href="#"
-                                        className="text-[14px] opacity-90 hover:opacity-100 hover:underline block transition-opacity"
+                                        className="text-[18px] font-montserrat font-normal opacity-90 hover:opacity-100 hover:underline block transition-opacity"
                                     >
                                         {service}
                                     </a>
@@ -154,8 +166,8 @@ export const Footer = () => {
                         </Box>
 
                         {/* About */}
-                        <Box className="lg:w-1/4">
-                            <Text className="text-[16px] font-semibold mb-4">About</Text>
+                        <Box className="absolute left-[1600px] top-[45px]">
+                            <Text className="text-[21px] font-semibold font-montserrat mb-4">About</Text>
                             <Stack className="space-y-2.5">
                                 {[
                                     'Our Story',
@@ -167,7 +179,7 @@ export const Footer = () => {
                                     <a
                                         key={item}
                                         href="#"
-                                        className="text-[14px] opacity-90 hover:opacity-100 hover:underline block transition-opacity"
+                                        className="text-[18px] font-montserrat font-normal opacity-90 hover:opacity-100 hover:underline block transition-opacity"
                                     >
                                         {item}
                                     </a>
@@ -177,8 +189,8 @@ export const Footer = () => {
                     </Flex>
 
                     {/* Copyright */}
-                    <Box className="mt-12 pt-6 border-t border-white/20">
-                        <Text className="text-center text-[13px] opacity-70">
+                    <Box className="mt-12 pt-[42px] border-t border-white/20 mx-[39px]">
+                        <Text className="text-center text-[18px] font-montserrat font-normal text-white">
                             © 2025 MateLuxy. All Rights Reserved.
                         </Text>
                     </Box>
