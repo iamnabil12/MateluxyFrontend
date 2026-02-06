@@ -1,93 +1,12 @@
 'use client';
 
 import { Box, Flex, Text } from '@frooxi-labs/adaptive-ui';
-import { Header2 } from '@/src/presentation/components/properties/Header2';
-import { PropertyFilter } from '@/src/presentation/components/properties/PropertyFilter';
-import { PropertyCard, PropertyCardProps } from '@/src/components/PropertyCard';
-import Image from 'next/image';
-import { useState } from 'react';
-
-const baseProperties: PropertyCardProps[] = [
-    {
-        image: '/Image/property.png',
-        title: 'Prawira Valley Prawira...',
-        address: '3825 E Prawirotaman Ave, Jogja 85018',
-        beds: 3,
-        baths: 2,
-        sqft: 2200,
-        price: '18000 AED',
-        type: 'Appartment',
-        badge: 'Off Plan',
-        developer: 'NAKHEEL',
-        agent: { name: 'Tanvir Almas', languages: 'Speaks English, Bengali', avatar: '/Image/BGimage.png' }
-    },
-    {
-        image: '/Image/property.png',
-        title: 'Prawira Valley Prawira...',
-        address: '3825 E Prawirotaman Ave, Jogja 85018',
-        beds: 3,
-        baths: 2,
-        sqft: 2200,
-        price: '18000 AED',
-        type: 'Appartment',
-        badge: 'Off Plan',
-        agent: { name: 'Tanvir Almas', languages: 'Speaks English, Bengali', avatar: '/Image/BGimage.png' }
-    },
-    {
-        image: '/Image/property.png',
-        title: 'Prawira Valley Prawira...',
-        address: '3825 E Prawirotaman Ave, Jogja 85018',
-        beds: 3,
-        baths: 2,
-        sqft: 2200,
-        price: '18000 AED',
-        type: 'Appartment',
-        badge: 'Off Plan',
-        developer: 'NAKHEEL',
-        agent: { name: 'Tanvir Almas', languages: 'Speaks English, Bengali', avatar: '/Image/BGimage.png' }
-    },
-    {
-        image: '/Image/property.png',
-        title: 'Prawira Valley Prawira...',
-        address: '3825 E Prawirotaman Ave, Jogja 85018',
-        beds: 3,
-        baths: 2,
-        sqft: 2200,
-        price: '18000 AED',
-        type: 'Appartment',
-        badge: 'Off Plan',
-        agent: { name: 'Tanvir Almas', languages: 'Speaks English, Bengali', avatar: '/Image/BGimage.png' }
-    },
-    {
-        image: '/Image/property.png',
-        title: 'Prawira Valley Prawira...',
-        address: '3825 E Prawirotaman Ave, Jogja 85018',
-        beds: 3,
-        baths: 2,
-        sqft: 2200,
-        price: '18000 AED',
-        type: 'Appartment',
-        badge: 'Off Plan',
-        developer: 'NAKHEEL',
-        agent: { name: 'Tanvir Almas', languages: 'Speaks English, Bengali', avatar: '/Image/BGimage.png' }
-    },
-    {
-        image: '/Image/property.png',
-        title: 'Prawira Valley Prawira...',
-        address: '3825 E Prawirotaman Ave, Jogja 85018',
-        beds: 3,
-        baths: 2,
-        sqft: 2200,
-        price: '18000 AED',
-        type: 'Appartment',
-        badge: 'Off Plan',
-        developer: 'NAKHEEL',
-        agent: { name: 'Tanvir Almas', languages: 'Speaks English, Bengali', avatar: '/Image/BGimage.png' }
-    },
-];
-
-// Generate 24 items
-const sampleProperties = Array.from({ length: 4 }).flatMap(() => baseProperties);
+import { Header } from '@/src/presentation/shared/components/Header';
+import { PropertyFilter } from '@/src/presentation/shared/components/PropertyFilter';
+import { PropertyCard, PropertyCardProps } from '@/src/presentation/shared/components/PropertyCard';
+import { PropertyCardSkeleton } from '@/src/presentation/shared/components/PropertyCardSkeleton';
+import { useState, useEffect } from 'react';
+import { api, Property, OffPlanProperty } from '@/src/services/api';
 
 export default function PropertiesPage() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -95,7 +14,83 @@ export default function PropertiesPage() {
     const [sortBy, setSortBy] = useState('Newest');
     const [isSortOpen, setIsSortOpen] = useState(false);
 
+    const [properties, setProperties] = useState<PropertyCardProps[]>([]);
+    const [loading, setLoading] = useState(true);
+
     const sortOptions = ['Newest', 'Oldest', 'A-Z', 'Z-A', 'Price: Low to High', 'Price: High to Low'];
+
+    useEffect(() => {
+        const fetchAllProperties = async () => {
+            setLoading(true);
+            try {
+                // Fetch both standard and off-plan properties
+                const [standardProps, offPlanProps] = await Promise.all([
+                    api.getProperties({ limit: 1000, sortBy: 'date', sortOrder: 'desc' }),
+                    api.getOffPlanProperties({ limit: 1000, sortBy: 'date', sortOrder: 'desc' })
+                ]);
+
+                const mappedStandard = standardProps.map((p: Property) => {
+                    const getAddress = () => {
+                        const title = p.propertyTitle?.trim()?.toLowerCase();
+                        const addr = p.address?.trim();
+                        if (addr && addr.toLowerCase() !== title) return addr;
+                        const pfPath = p.pfLocationPath?.trim();
+                        if (pfPath && pfPath.toLowerCase() !== title) return pfPath;
+                        const emirate = p.emirate?.trim();
+                        if (emirate && emirate.toLowerCase() !== title) return emirate;
+                        return 'Dubai, UAE';
+                    };
+
+                    return {
+                        image: p.coverPhoto || '/Image/property.png',
+                        title: p.propertyTitle || 'Untitled Property',
+                        address: getAddress(),
+                        beds: Number(p.bedrooms) || 0,
+                        baths: p.bathrooms || 0,
+                        sqft: p.area || 0,
+                        price: p.price ? `${p.price.toLocaleString()} AED` : 'Price on Request',
+                        type: p.propertyType || 'Property',
+                        badge: p.purpose || 'Exclusive',
+                        agent: {
+                            name: p.assignedAgent?.name || 'Mateluxy Agent',
+                            languages: p.assignedAgent?.languages?.join(', ') || 'English, Arabic',
+                            avatar: p.assignedAgent?.photoUrl || '/Logo_Color.svg'
+                        }
+                    };
+                });
+
+                const mappedOffPlan = offPlanProps.map((p: OffPlanProperty) => ({
+                    image: p.coverPhoto || '/Image/property.png',
+                    title: p.projectTitle || 'Untitled Project',
+                    address: p.address || 'Dubai, UAE',
+                    beds: Number(p.bedrooms) || 0,
+                    baths: p.bathrooms || 0,
+                    sqft: p.area || 0,
+                    price: p.startingPrice ? `${p.startingPrice.toLocaleString()} AED` : 'Price on Request',
+                    type: p.propertyType?.[0] || 'Project',
+                    badge: 'Off Plan',
+                    developer: {
+                        name: p.developer?.name || 'Developer',
+                        logo: p.developer?.logoUrl
+                    },
+                    agent: {
+                        name: 'Mateluxy',
+                        languages: 'English, Arabic',
+                        avatar: '/Logo_Color.svg'
+                    }
+                }));
+
+                // Interleave or just merge
+                setProperties([...mappedOffPlan, ...mappedStandard]);
+            } catch (error) {
+                console.error('Failed to fetch properties', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAllProperties();
+    }, []);
 
     const handleCloseFilter = () => {
         setIsClosing(true);
@@ -107,7 +102,18 @@ export default function PropertiesPage() {
 
     return (
         <main className="bg-white min-h-screen">
-            <Header2 />
+            <Header theme="dark" />
+
+            <Box className="w-full max-w-[1600px] mx-auto px-4 md:px-6 lg:px-8 pt-[140px] pb-10 text-center">
+                <Text
+                    as="h1"
+                    className="text-[30px] md:text-[40px] lg:text-[45px] font-medium text-[#8F8F8F] leading-tight"
+                >
+                    Uncover a Wide Selection & Match
+                    <br />
+                    <span className="text-black font-bold">with Your Dream House</span>
+                </Text>
+            </Box>
 
             <Box className="w-full max-w-[1600px] mx-auto px-4 md:px-6 lg:px-8 pb-20">
                 <Flex className="flex flex-col lg:flex-row gap-8 lg:items-stretch w-full">
@@ -123,7 +129,7 @@ export default function PropertiesPage() {
                     <Box className="flex-1 w-full min-w-0">
                         {/* Results Header */}
                         <Flex className="flex justify-between items-center mb-6">
-                            <Text className="text-gray-500 text-[16px]">256 properties found</Text>
+                            <Text className="text-gray-500 text-[16px]">{properties.length} properties found</Text>
                             <Flex className="flex items-center gap-3">
                                 {/* Mobile Filter Button */}
                                 <button
@@ -170,10 +176,20 @@ export default function PropertiesPage() {
                         </Flex>
 
                         {/* Grid */}
-                        <Box className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[15px]">
-                            {sampleProperties.map((property, index) => (
-                                <PropertyCard key={index} {...property} />
-                            ))}
+                        <Box className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[15px] min-h-[400px]">
+                            {loading ? (
+                                Array.from({ length: 9 }).map((_, index) => (
+                                    <PropertyCardSkeleton key={`skeleton-${index}`} />
+                                ))
+                            ) : properties.length > 0 ? (
+                                properties.map((property, index) => (
+                                    <PropertyCard key={index} {...property} />
+                                ))
+                            ) : (
+                                <Flex className="col-span-full h-full items-center justify-center py-20">
+                                    <Text className="text-gray-500 text-lg">No properties available at the moment.</Text>
+                                </Flex>
+                            )}
                         </Box>
                     </Box>
                 </Flex>
