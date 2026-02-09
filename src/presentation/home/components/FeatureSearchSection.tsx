@@ -36,15 +36,15 @@ export const FeatureSearchSection = () => {
                     </Text>
 
                     {/* Tabs */}
-                    <Box className="bg-[#EDEDED] p-1.5 rounded-full inline-flex items-center">
+                    <Box className="bg-[#E1E1E1]/40 p-1.5 rounded-full inline-flex items-center">
                         {TABS.map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`
-                                    px-8 py-2.5 rounded-full text-[16px] font-semibold transition-all duration-300 font-montserrat
+                                    px-8 py-2.5 rounded-full text-[16px] font-normal transition-all duration-300 font-montserrat
                                     ${activeTab === tab
-                                        ? 'bg-white text-black shadow-sm'
+                                        ? 'bg-white text-black'
                                         : 'text-[#6D6D6D] hover:text-black'
                                     }
                                 `}

@@ -7,6 +7,7 @@ import { PropertyCard, PropertyCardProps } from '@/src/presentation/shared/compo
 import { PropertyCardSkeleton } from '@/src/presentation/shared/components/PropertyCardSkeleton';
 import { useState, useEffect } from 'react';
 import { api, Property, OffPlanProperty } from '@/src/services/api';
+import { useSearchParams } from 'next/navigation';
 
 export default function PropertiesPage() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -19,15 +20,44 @@ export default function PropertiesPage() {
 
     const sortOptions = ['Newest', 'Oldest', 'A-Z', 'Z-A', 'Price: Low to High', 'Price: High to Low'];
 
+    const searchParams = useSearchParams();
+    const purposeParam = searchParams.get('purpose');
+    const categoryParam = searchParams.get('category');
+    const locationParam = searchParams.get('location');
+
     useEffect(() => {
         const fetchAllProperties = async () => {
             setLoading(true);
             try {
-                // Fetch both standard and off-plan properties
-                const [standardProps, offPlanProps] = await Promise.all([
-                    api.getProperties({ limit: 1000, sortBy: 'date', sortOrder: 'desc' }),
-                    api.getOffPlanProperties({ limit: 1000, sortBy: 'date', sortOrder: 'desc' })
-                ]);
+                // Fetch properties with filters
+                const apiParams: any = {
+                    limit: 1000,
+                    sortBy: 'date',
+                    sortOrder: 'desc'
+                };
+
+                if (purposeParam) apiParams.purpose = purposeParam;
+                if (categoryParam) apiParams.category = categoryParam;
+
+                // User requested "this search is not for off plan", so if we are searching (have filters), we might skip off-plan?
+                // Or just always fetch standard properties, and only fetch off-plan if NO filters?
+                // Providing a consistent experience: If "Buy" selected, could include off-plan?
+                // User said: "and the purpose is Buy or rent... and this search is not for off plan"
+                // So if we have search params, we ONLY fetch standard properties.
+
+                const isSearching = !!(locationParam || purposeParam || categoryParam);
+
+                const promises: Promise<any>[] = [
+                    api.getProperties(apiParams)
+                ];
+
+                if (!isSearching) {
+                    promises.push(api.getOffPlanProperties(apiParams));
+                }
+
+                const results = await Promise.all(promises);
+                const standardProps = results[0];
+                const offPlanProps = results[1] || [];
 
                 const mappedStandard = standardProps.map((p: Property) => {
                     const getAddress = () => {
@@ -80,8 +110,18 @@ export default function PropertiesPage() {
                     }
                 }));
 
-                // Interleave or just merge
-                setProperties([...mappedOffPlan, ...mappedStandard]);
+                // Combine and filter by location if provided (Client-side filtering for now)
+                let combined = [...mappedOffPlan, ...mappedStandard];
+
+                if (locationParam) {
+                    const locLower = locationParam.toLowerCase();
+                    combined = combined.filter(p =>
+                        p.address.toLowerCase().includes(locLower) ||
+                        p.title.toLowerCase().includes(locLower)
+                    );
+                }
+
+                setProperties(combined);
             } catch (error) {
                 console.error('Failed to fetch properties', error);
             } finally {
@@ -90,7 +130,7 @@ export default function PropertiesPage() {
         };
 
         fetchAllProperties();
-    }, []);
+    }, [searchParams, purposeParam, categoryParam, locationParam]);
 
     const handleCloseFilter = () => {
         setIsClosing(true);

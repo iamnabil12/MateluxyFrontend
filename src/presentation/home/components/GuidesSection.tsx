@@ -57,29 +57,39 @@ export const GuidesSection = () => {
                 </Flex>
 
                 {/* Team Cards - Overlapping Layout */}
-                <Box className="relative h-[300px] md:h-[400px] w-full flex justify-center items-center mb-16">
-                    <Flex className="items-center justify-center -space-x-12 md:-space-x-16 hover:space-x-4 transition-all duration-300 ease-in-out py-10 px-4 overflow-x-auto no-scrollbar md:overflow-visible w-full min-h-[380px]">
-                        {displayAgents.map((agent, index) => (
-                            <Box
-                                key={agent?.id || index}
-                                className="relative w-[200px] h-[280px] md:w-[260px] md:h-[360px] rounded-[20px] overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 hover:z-20 border-4 border-white flex-shrink-0 grayscale hover:grayscale-0 bg-gray-200"
-                                style={{ zIndex: 10 - index }} // Stack order
-                            >
-                                <Image
-                                    src={agent?.photoUrl || `/Image/profile_${(index % 5) + 1}.png`} // Use profile_X.png as generic fallback if no photoUrl
-                                    alt={agent?.name || `Team Member ${index + 1}`}
-                                    fill
-                                    className="object-cover"
-                                />
-                                {/* Name Overlay on Hover (Optional, enhancing the card) */}
-                                {agent && (
-                                    <Box className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 hover:opacity-100 transition-opacity flex flex-col justify-end h-1/2">
-                                        <Text className="text-white font-semibold text-lg">{agent.name}</Text>
-                                        <Text className="text-gray-300 text-sm">{agent.position}</Text>
-                                    </Box>
-                                )}
-                            </Box>
-                        ))}
+                <Box className="relative h-[400px] w-full flex justify-center items-center mb-16">
+                    <Flex className="items-center justify-center -space-x-[50px] py-10 px-4 w-full">
+                        {displayAgents.map((agent, index) => {
+                            // Random rotations for horizontal layout
+                            const rotations = [
+                                'rotate-[-3deg]',
+                                'rotate-[3deg]',
+                                'rotate-[-4deg]',
+                                'rotate-[4deg]',
+                                'rotate-[-2deg]',
+                                'rotate-[2deg]'
+                            ];
+                            const rotationClass = rotations[index % rotations.length];
+
+                            return (
+                                <Box
+                                    key={agent?.id || index}
+                                    className={`relative w-[192px] h-[243px] rounded-[24px] overflow-hidden shadow-2xl flex-shrink-0 ${rotationClass}`}
+                                    style={{
+                                        zIndex: index, // Stack natural usage
+                                        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.4)'
+                                    }}
+                                >
+                                    <Image
+                                        src={agent?.photoUrl || `/Image/profile_${(index % 5) + 1}.png`}
+                                        alt={agent?.name || `Team Member ${index + 1}`}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                    {/* Name Overlay - REMOVED */}
+                                </Box>
+                            );
+                        })}
                     </Flex>
                 </Box>
 
