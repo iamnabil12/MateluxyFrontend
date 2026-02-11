@@ -6,40 +6,77 @@ import Image from 'next/image';
 interface MemberCardProps {
     name: string;
     role: string;
+    department?: string;
     image: string;
     languages: string[];
 }
 
-export const MemberCard = ({ name, role, image, languages }: MemberCardProps) => {
+export const MemberCard = ({ name, role, department, image, languages }: MemberCardProps) => {
     return (
-        <Box className="relative w-full aspect-[3/4] rounded-[30px] overflow-hidden group cursor-pointer bg-gray-50">
-            {/* Background Shape/Gradient (Optional, matching the 'arch' feel if needed, simplified here) */}
-            <Box className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10" />
+        <Box className="group relative w-full sm:w-[300px] h-[437px] bg-[#F3F3F3] rounded-[40px] overflow-hidden transition-shadow duration-300 border-[4px] border-[#F3F3F3]">
+            {/* Background Image Area - Full Box */}
+            <Box className="absolute inset-0 w-full h-full overflow-hidden bg-gray-50">
+                <Image
+                    src={image}
+                    alt={name}
+                    fill
+                    className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                />
+                {/* Gradient Overlay for Text Readability: White Gradient based on specs */}
+                <Box
+                    className="absolute inset-0 z-10"
+                    style={{
+                        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 42%, #FFFFFF 91%, #FFFFFF 100%)'
+                    }}
+                />
+            </Box>
 
-            <Image
-                src={image}
-                alt={name}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+            {/* Content Area - Bottom Overlay */}
+            <Box className="absolute bottom-0 left-0 right-0 p-6 pt-12 z-20">
+                <Text
+                    className="text-[25px] font-semibold text-black mb-1 leading-tight"
+                    style={{ fontFamily: 'var(--font-montserrat)' }}
+                >
+                    {name}
+                </Text>
 
-            {/* Content Overlay */}
-            <Box className="absolute bottom-0 left-0 right-0 p-5 z-20 text-white">
-                <Text className="text-2xl font-bold mb-1">{name}</Text>
-                <Text className="text-xs text-gray-300 uppercase tracking-widest mb-4">{role}</Text>
+                <Flex className="gap-2 items-center mb-6 overflow-hidden w-full">
+                    <Text
+                        className="text-[14px] text-[#444444] font-medium tracking-wide whitespace-nowrap truncate flex-1 min-w-0"
+                        style={{ fontFamily: 'var(--font-montserrat)' }}
+                    >
+                        {role}
+                    </Text>
+                    {department && (
+                        <Flex className="items-center gap-2 flex-shrink-0 max-w-[50%]">
+                            <Box className="w-[1px] h-[12px] bg-gray-400 flex-shrink-0" />
+                            <Text
+                                className="text-[14px] text-[#747474] font-normal tracking-wide whitespace-nowrap truncate"
+                                style={{ fontFamily: 'var(--font-montserrat)' }}
+                            >
+                                {department}
+                            </Text>
+                        </Flex>
+                    )}
+                </Flex>
 
-                {/* Languages & Action */}
-                <Flex className="justify-between items-end border-t border-white/20 pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
-                    <Flex className="gap-2">
-                        {languages.map((lang, idx) => (
-                            <Box key={idx} className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-medium">
+                <Flex className="justify-between items-end">
+                    {/* Languages Pills */}
+                    <Flex className="gap-2 flex-wrap">
+                        {languages.slice(0, 2).map((lang, idx) => (
+                            <Box
+                                key={idx}
+                                className="bg-gray-100 px-3 py-1.5 rounded-full text-[14px] font-medium text-gray-600"
+                                style={{ fontFamily: 'var(--font-montserrat)' }}
+                            >
                                 {lang}
                             </Box>
                         ))}
                     </Flex>
 
-                    <Box className="w-8 h-8 bg-white text-black rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {/* Arrow Button */}
+                    <Box className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-800 hover:bg-black hover:text-white transition-colors duration-300 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                         </svg>

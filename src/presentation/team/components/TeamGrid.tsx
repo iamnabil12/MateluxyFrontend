@@ -1,11 +1,18 @@
 'use client';
 
-import { Box, Flex } from '@frooxi-labs/adaptive-ui';
+import { Box, Flex, Text } from '@frooxi-labs/adaptive-ui';
 import { MemberCard } from './MemberCard';
 import { useEffect, useState } from 'react';
 import { api, Agent } from '../../../services/api';
+import { MOCK_AGENTS } from '../../../services/mockAgents';
 
-export const TeamGrid = () => {
+interface TeamGridProps {
+    searchQuery?: string;
+    department?: string;
+    activeTab?: 'agents' | 'team';
+}
+
+export const TeamGrid = ({ searchQuery = '', department = 'All', activeTab = 'agents' }: TeamGridProps) => {
     const [members, setMembers] = useState<Agent[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -13,19 +20,54 @@ export const TeamGrid = () => {
     const ITEMS_PER_PAGE = 8; // 2 rows * 4 columns
 
     useEffect(() => {
+        // Force use of mock data for development/demo purposes to show pagination
+        console.log('Total Agents:', MOCK_AGENTS.length);
+        setMembers(MOCK_AGENTS);
+        setLoading(false);
+
+        /* 
         const fetchAgents = async () => {
             try {
                 const data = await api.getAgents();
                 setMembers(data);
             } catch (error) {
                 console.error('Failed to fetch agents:', error);
+                setMembers(MOCK_AGENTS);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchAgents();
+        */
     }, []);
+
+
+    // Filter Logic
+    const filteredMembers = members.filter(member => {
+        // Tab Filtering (Optional Extension)
+        if (activeTab === 'team' && member.department !== 'Management') {
+            // ...
+        }
+
+        const query = searchQuery.toLowerCase();
+        const matchesSearch = member.name.toLowerCase().includes(query) ||
+            member.position.toLowerCase().includes(query);
+
+        const matchesDept = department === 'All' || !department ||
+            (member.department && member.department === department);
+
+        return matchesSearch && matchesDept;
+    });
+
+    console.log('TeamGrid Debug: Total:', members.length, 'Filtered:', filteredMembers.length, 'Dept:', department, 'Tab:', activeTab);
+
+
+
+    // Reset page when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery, department, activeTab]);
 
     if (loading) {
         return (
@@ -38,9 +80,9 @@ export const TeamGrid = () => {
     }
 
     // Pagination Logic
-    const totalPages = Math.ceil(members.length / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(filteredMembers.length / ITEMS_PER_PAGE);
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const currentMembers = members.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    const currentMembers = filteredMembers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
@@ -52,27 +94,34 @@ export const TeamGrid = () => {
 
     return (
         <Box className="container mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {currentMembers.map((member) => (
-                    <MemberCard
-                        key={member.id}
-                        name={member.name}
-                        role={member.position}
-                        image={member.photoUrl || '/Image/profile_1.png'} // Fallback image
-                        languages={member.languages && member.languages.length > 0 ? member.languages : ['English']}
-                    />
-                ))}
-            </div>
+            {filteredMembers.length === 0 ? (
+                <Box className="text-center py-20 text-gray-500">
+                    <Text className="text-lg">No agents found matching your criteria.</Text>
+                </Box>
+            ) : (
+                <div className="flex flex-wrap justify-center gap-y-6 gap-x-[21px]">
+                    {currentMembers.map((member) => (
+                        <MemberCard
+                            key={member.id}
+                            name={member.name}
+                            role={member.position}
+                            department={member.department}
+                            image={member.photoUrl || '/Image/profile_1.png'} // Fallback image
+                            languages={member.languages && member.languages.length > 0 ? member.languages : ['English']}
+                        />
+                    ))}
+                </div>
+            )}
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-                <Flex className="justify-center mt-12 gap-2">
+                <Flex className="justify-center mt-16 gap-4 items-center">
                     {/* Previous Button */}
                     <Box
                         onClick={() => handlePageChange(currentPage - 1)}
-                        className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors ${currentPage === 1 ? 'text-gray-300 pointer-events-none' : 'text-gray-500 hover:bg-gray-100'}`}
+                        className={`w-6 h-6 flex items-center justify-center cursor-pointer transition-all duration-300 ${currentPage === 1 ? 'text-gray-300 pointer-events-none' : 'text-[#DFDFDF] hover:text-black'}`}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </Box>
@@ -82,10 +131,11 @@ export const TeamGrid = () => {
                         <Box
                             key={page}
                             onClick={() => handlePageChange(page)}
-                            className={`w-8 h-8 rounded-full flex items-center justify-center font-medium text-sm cursor-pointer transition-all ${currentPage === page
-                                ? 'bg-red-500 text-white shadow-md'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            className={`rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 ${currentPage === page
+                                ? 'w-[60px] h-[60px] bg-[#FF1111] text-white text-[25px]'
+                                : 'w-[55px] h-[55px] bg-[#E2E2E2] text-[#2E2E2E] text-[20px] hover:bg-gray-300'
                                 }`}
+                            style={{ fontFamily: 'var(--font-montserrat)', fontWeight: 400 }}
                         >
                             {page}
                         </Box>
@@ -94,9 +144,9 @@ export const TeamGrid = () => {
                     {/* Next Button */}
                     <Box
                         onClick={() => handlePageChange(currentPage + 1)}
-                        className={`w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors ${currentPage === totalPages ? 'text-gray-300 pointer-events-none' : 'text-gray-500 hover:bg-gray-100'}`}
+                        className={`w-6 h-6 flex items-center justify-center cursor-pointer transition-all duration-300 ${currentPage === totalPages ? 'text-gray-300 pointer-events-none' : 'text-[#DFDFDF] hover:text-black'}`}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </Box>

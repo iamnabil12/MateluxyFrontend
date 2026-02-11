@@ -5,45 +5,66 @@ import Image from 'next/image';
 
 export const ManagementBenefits = () => {
     return (
-        <Box className="container mx-auto px-4 py-16 pb-24">
-            <Flex className="flex-col lg:flex-row gap-12 items-center">
+        <Box className="relative w-full py-16 pb-24 overflow-hidden">
+            {/* Background Texture */}
+            <Box className="absolute inset-0 w-full h-full z-0">
+                <Image
+                    src="/Image/guidepagebg.png"
+                    alt="Background"
+                    fill
+                    className="object-fill object-center"
+                />
+            </Box>
 
-                {/* Left: Image Collage (Arch Shape) */}
-                <Box className="relative w-full lg:w-1/2 h-[400px] lg:h-[500px]">
-                    {/* Background Blob/Shape */}
-                    <Box className="absolute inset-0 bg-gray-100 rounded-t-full opacity-50" />
+            {/* Content */}
+            <Box className="relative z-10 container mx-auto px-4">
+                <Flex className="flex-col lg:flex-row gap-12 items-center">
 
-                    {/* Main Image Masked */}
-                    <Box className="absolute inset-4 rounded-t-full overflow-hidden border-[8px] border-white shadow-lg">
-                        <Image
-                            src="/Image/TeamHeroImage.png" // Placeholder
-                            alt="Property Management Team"
-                            fill
-                            className="object-cover"
-                        />
+                    {/* Left: Image Rectangle */}
+                    <Box className="relative w-full lg:w-auto lg:flex-shrink-0">
+                        <Box className="relative w-full h-[330px] lg:w-[650px] lg:h-[460px] rounded-lg overflow-hidden">
+                            <Image
+                                src="/Image/TeamHeroImage.png"
+                                alt="Property Management Team"
+                                fill
+                                className="object-cover"
+                            />
+                        </Box>
                     </Box>
-                </Box>
 
-                {/* Right: Text Content */}
-                <Box className="w-full lg:w-1/2 text-black">
-                    <Text className="text-3xl md:text-4xl font-bold mb-8 leading-tight">
-                        Choosing The Right Property <br /> Management Partner
-                    </Text>
+                    {/* Right: Text Content */}
+                    <Box className="w-full lg:w-1/2 text-black">
+                        <Text
+                            className="text-[35px] font-semibold mb-8 leading-tight"
+                            style={{ fontFamily: 'var(--font-montserrat)' }}
+                        >
+                            Choosing The Right Property <br /> Management Partner
+                        </Text>
 
-                    <Text className="text-gray-600 text-sm leading-relaxed mb-6">
-                        Entrusting Your Rental Property To The Right Agency Is A Big Decision. At Mateluxy Real Estate, We Combine Professionalism, RERA Certification, And A Proven Track Record Of Five-Star Client Satisfaction To Give You Absolute Peace Of Mind.
-                    </Text>
+                        <Text
+                            className="text-[16px] font-normal text-gray-600 leading-relaxed mb-6"
+                            style={{ fontFamily: 'var(--font-montserrat)' }}
+                        >
+                            Entrusting your rental property to the right agency is a big decision. At Mateluxy Real Estate, we combine professionalism, RERA certification, and a proven track record of five-star client satisfaction to give you absolute peace of mind.
+                        </Text>
 
-                    <Text className="text-gray-600 text-sm leading-relaxed mb-6">
-                        We Offer A Complete, High-End Property Management Solution — From Marketing And Advertising Your Villa Or Apartment, Sourcing And Screening Quality Tenants, Handling All Admin Issues, Collecting Payments, Overseeing Leasing Inspections, To Arranging Professional Cleaning, Maintenance, And Full Compliance With Dubai’s Latest Real Estate Regulations.
-                    </Text>
+                        <Text
+                            className="text-[16px] font-normal text-gray-600 leading-relaxed mb-6"
+                            style={{ fontFamily: 'var(--font-montserrat)' }}
+                        >
+                            We offer a complete, high-end property management solution — from marketing and advertising your villa or apartment, sourcing and screening quality tenants, handling all administration, collecting payments, overseeing leasing inspections, to arranging professional cleaning, maintenance, and full compliance with Dubai's latest real estate regulations.
+                        </Text>
 
-                    <Text className="text-gray-600 text-sm leading-relaxed">
-                        With Mateluxy, Your Investment Is In Expert Hands — Managed With Precision, Care, And A Commitment To Excellence.
-                    </Text>
-                </Box>
+                        <Text
+                            className="text-[16px] font-normal text-gray-600 leading-relaxed"
+                            style={{ fontFamily: 'var(--font-montserrat)' }}
+                        >
+                            With Mateluxy, your investment is in expert hands — managed with precision, care, and a commitment to excellence.
+                        </Text>
+                    </Box>
 
-            </Flex>
+                </Flex>
+            </Box>
         </Box>
     );
 };

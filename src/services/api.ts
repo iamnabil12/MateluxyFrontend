@@ -139,16 +139,11 @@ export const api = {
     },
 
     getAgents: async (): Promise<Agent[]> => {
-        try {
-            const res = await fetch(`${BASE_URL}/agents/public`, {
-                next: { revalidate: 60 },
-            });
-            if (!res.ok) throw new Error('Failed to fetch agents');
-            return res.json();
-        } catch (error) {
-            console.error('Error fetching agents:', error);
-            return [];
-        }
+        const res = await fetch(`${BASE_URL}/agents/public`, {
+            next: { revalidate: 60 },
+        });
+        if (!res.ok) throw new Error('Failed to fetch agents');
+        return res.json();
     }
 };
 
